@@ -1,6 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Button,Row,Col,Modal,List} from 'antd';
 
 class App extends React.Component{
   constructor(props){
@@ -9,6 +9,9 @@ class App extends React.Component{
       message: null,
       dataList: null,
       choosed: null,
+      searchTime: null,
+      duePayList: null,
+      modalVisible: false,
     };
   }
 
@@ -39,32 +42,73 @@ class App extends React.Component{
 
   searchDuePay=(e)=>{
     var number=e.target.id.replace("bank_","");
-    console.log(number);
+    if(number==="null"){
+      return;
+    }
+    fetch("https://localhost:5001/api/Transfer/Search/"+number,{
+      method: 'GET'
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      this.setState({searchTime:data.timeSpan});
+      this.setState({duePayList:data.resultList});
+      this.setState({modalVisible:true});
+    })
   };
+
+  handleOk=(e)=>{
+    this.setState({modalVisible:false});
+  }
+
+  handleCancel=(e)=>{
+    this.setState({modalVisible:false});
+  }
 
   render(){
     var items=[];
 
     if(this.state.dataList!=null){
       this.state.dataList.forEach(element => {
-        items.push(<tr>
-                    <td>{element.duePay}</td>
-                    <td>{element.bankTransfer}</td>
-                    <td>
-                      <button id={"bank_"+element.bankTransfer} onClick={this.searchDuePay}>Search</button>
-                    </td>
-                  </tr>)
+        items.push(<Row>
+                    <Col span={4}>{element.duePay}</Col>
+                    <Col span={4}>{element.bankTransfer}</Col>
+                    <Col span={4}>
+                      <Button id={"bank_"+element.bankTransfer}
+                              type="primary" shape="circle" icon="search"
+                              onClick={this.searchDuePay}></Button>
+                    </Col>
+                  </Row>)
       });
     }
     
     return (
-      <div>
-        <button onClick={this.getData}>Get Data</button>
-        <table>
-          <tbody>
-              {items}
-          </tbody>
-        </table>
+      <div className="App">
+          <Row>
+            <Col span={12}>
+              <Button type="primary" onClick={this.getData}>Get Data</Button>
+            </Col>
+          </Row>
+            <Row>
+              <Col span={5}>Due Pay</Col>
+              <Col span={5}>Bank Transfer</Col>
+              <Col span={2}></Col>
+            </Row>
+            {items}
+            <Modal title="Search Result"
+                  visible={this.state.modalVisible}
+                  onOk={this.handleOk}
+                  onCancel={this.handleCancel}>
+              <p>Get the result cost {this.state.searchTime} milliseconds.</p>
+              <p>The Due Pay are:</p>
+              <p>
+                <List
+                  size="small"
+                  bordered
+                  dataSource={this.state.duePayList}
+                  renderItem={item => (<List.Item>{item}</List.Item>)}
+                />
+              </p>
+            </Modal>
       </div>
     );
   }
