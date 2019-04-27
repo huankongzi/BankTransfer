@@ -13,10 +13,8 @@ React and Ant Design are totally new to me. Due that Sunday is workday, and I ha
 There is an issue which is not solved, uploading file cross domain issue. But other APIs have no this issue. Any API about reading file in action method will throw this issue. It is very hard to visit global website. I have less resource to search out the problem. 
 
 4. Workaround
-I put a file in server side, reading the content if user click ¡°Get Data¡± button.
+I put a file in server side, reading the content if user click "Get DataÂ¡" button.
 
 5. Function test
-Click ¡°Get Data¡± button shows as below,
-
-Click one search button at the end of a line shows as below,
-
+Click "Get Data" button shows in the Tests/1.png.
+Click one search button at the end of a line shows in the Test/2.png.
