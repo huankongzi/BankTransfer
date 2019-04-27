@@ -29,7 +29,10 @@ namespace Backend
             services.AddCors(options => {
                 options.AddPolicy("transferPolicy", p =>
                 {
-                    p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
+                    p.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
                 });
             });
         }
@@ -48,6 +51,7 @@ namespace Backend
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors("transferPolicy");
         }
     }
 }

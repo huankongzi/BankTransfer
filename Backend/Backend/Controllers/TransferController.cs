@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Backend.Models;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -81,29 +82,13 @@ namespace Backend.Controllers
             return new JsonResult(result);
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Route("UploadFile")]
+        [Consumes("multipart/form-data")]
+        public ActionResult Post([FromForm] IFormFile formFile)
+        //public ActionResult Post()
         {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return new OkResult();
         }
     }
 }
