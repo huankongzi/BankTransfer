@@ -16,5 +16,6 @@ There is an issue which is not solved, uploading file cross domain issue. But ot
 I put a file in server side, reading the content if user click "Get Data¡" button.
 
 5. Function test
-Click "Get Data" button shows in the Tests/1.png.
-Click one search button at the end of a line shows in the Test/2.png.
+Click "Click to Upload" to upload file as Tests/1.png
+Click "Get Data" button shows data as Tests/2.png.
+Click one search button at the end of a line shows in the Test/3.png.
