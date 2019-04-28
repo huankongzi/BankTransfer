@@ -16,9 +16,6 @@ class App extends React.Component {
         name: 'file',
         method: 'POST',
         action: 'https://localhost:5001/api/Transfer/UploadFile',
-        headers: {
-          "Content-Type": 'multipart/form-data',
-        },
       }
     };
   }
@@ -32,21 +29,6 @@ class App extends React.Component {
         this.setState({ dataList: data });
       });
   };
-
-  // uploadFile = (e)=>{
-  //   const file = e.target.files[0];
-  //   const data = new FormData();
-  //   data.append('file',file);
-
-  //   fetch('https://localhost:5001/api/Transfer',{
-  //     method: "POST",
-  //     body: data,
-  //     mode: "no-cors",
-  //     headers: {
-  //       "Content-Type": "multipart/form-data"
-  //     }
-  //   });
-  //}
 
   searchDuePay = (e) => {
     var number = e.target.id.replace("bank_", "");
@@ -92,13 +74,15 @@ class App extends React.Component {
     return (
       <div className="App">
         <Row>
-          <Col span={12}>
-            <Button type="primary" onClick={this.getData}>Get Data</Button>
+          <Col span={4}>
             <Upload {...this.state.uploadProps}>
               <Button>
                 <Icon type="upload" />Click to Upload
-                </Button>
+              </Button>
             </Upload>
+          </Col>
+          <Col span={4}>
+            <Button type="primary" onClick={this.getData}>Get Data</Button>
           </Col>
         </Row>
         <Row>

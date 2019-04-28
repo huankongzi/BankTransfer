@@ -18,50 +18,16 @@ namespace Backend.Controllers
     {
         private static LineItem[] dataList;
         private static decimal[] duePayList;
+        private IHttpContextAccessor httpContextAccessor;
+
+        public TransferController(IHttpContextAccessor httpContextAccessor)
+        {
+            this.httpContextAccessor = httpContextAccessor;
+        }
 
         [HttpGet]
         public ActionResult Get()
         {
-            if (dataList != null)
-                return new JsonResult(dataList);
-
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "input.csv");
-
-            List<LineItem> resultList = new List<LineItem>();
-            using(StreamReader sr=new StreamReader(path)) 
-            { 
-                while(sr.Peek()!=-1)
-                {
-                    string line = sr.ReadLine();
-                    if (string.IsNullOrEmpty(line))
-                        continue;
-
-                    string[] parts = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 0)
-                        continue;
-
-                    LineItem item;
-                    if (parts.Length >= 2) 
-                    {
-                        item = new LineItem
-                        {
-                            DuePay = parts[0],
-                            BankTransfer = parts[1]
-                        };
-                    }
-                    else
-                    {
-                        item = new LineItem
-                        {
-                            DuePay = parts[0]
-                        };
-                    }
-                    resultList.Add(item);
-                }
-            }
-
-            dataList = resultList.ToArray();
-            duePayList = resultList.Select(r => decimal.Parse(r.DuePay)).ToArray();
             return new JsonResult(dataList);
         }
 
@@ -84,10 +50,15 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("UploadFile")]
-        [Consumes("multipart/form-data")]
-        public ActionResult Post([FromForm] IFormFile formFile)
-        //public ActionResult Post()
+        public ActionResult Post()
         {
+            var file = httpContextAccessor.HttpContext.Request.Form.Files[0];
+            using (StreamReader sr = new StreamReader(file.OpenReadStream()))
+            {
+                dataList = new DuePayReader().Read(sr);
+            }
+
+            duePayList = dataList.Select(r => decimal.Parse(r.DuePay)).ToArray();
             return new OkResult();
         }
     }
